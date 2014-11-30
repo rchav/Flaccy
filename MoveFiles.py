@@ -50,12 +50,18 @@ def GetFlaccy(mySrc, myDest):
         
 
     # copy files to their places
+    numberOfFiles = len(justFileNames)
+    counter = 0
+
     for file in fullPaths:
         lastSlash = file.rfind('/') + 1
-        tempDest = file[lastSlash:]
-        tempList = tempDest.split('_')
+        fileName = file[lastSlash:]
+        tempList = fileName.split('_')
         subDest = tempList[0]
-        finalDest = myDest + subDest
-        shutil.copy(file, finalDest)
+        finalDest = myDest + subDest 
+        if not os.path.exists(finalDest + '/' + fileName):
+            shutil.copy(file, finalDest)
+        counter = counter + 1
+        print str(counter) + ' of ' + str(numberOfFiles) + ' files copied'
 
 lets = GetFlaccy(src, dest)
