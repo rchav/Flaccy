@@ -1,51 +1,61 @@
+# Let's get Flaccy
+
 import shutil
 import os
 
 src = "/Projects/InPho/"
-dest = "/Projects/Rikers Calls Dev/"
+dest = "/Projects/InPho/Rikers Calls Dev/"
 
-DANYsrc = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\'
-DANYdest = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\Rikers Calls Dev\'
+DANYsrc = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\\'
+DANYdest = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\Rikers Calls Dev\\'
 
-def CopyFlacFiles(src, dest):
+def GetFlaccy(mySrc, myDest):
 
-        # get an array of unique BAC's in all .flac's
-        for file in files:
-            if os.path
+    # create some lists of flac files and their paths
+    fullPaths = []
+    justFileNames = []
 
-        import os
-        for root, dirs, files in os.walk(".", topdown=False):
-            for name in files:
-                print(os.path.join(root, name))
-            for name in dirs:
-                print(os.path.join(root, name))
+    # what type of file are you looking for?
+    fileType = '.flac'
 
-        # create the file location on the X drive
-        if not os.path.exists(dest):
-            os.makedirs(dest)
+    # loop time
+    for root, dirs, files in os.walk(mySrc, topdown=False):
+        for name in files:
 
-        # copy the files from the CD to X drive
-        src_files = os.listdir(src)
+            # create a list of the full paths
+            fullFilePath = os.path.join(root, name)
+            if fullFilePath.endswith(fileType):
+                fullPaths.append(fullFilePath)
+
+            # create a list of the flac file names
+            justFlacFileName = os.path.join(name)
+            if justFlacFileName.endswith(fileType):
+                justFileNames.append(justFlacFileName)
+
+
+    # create a set of unique BACs
+    BACs = set()
+    for fileName in justFileNames:
+        BACs.add(fileName[:10])
+
+    # turn the set into a list
+    BACs = list(BACs)
+
+
+    # create the BAC folders
+    for BAC in BACs: 
+        folder = myDest + BAC + '/'
+        if not os.path.exists(folder):
+            os.makedirs(folder)
         
-        # copy loop with counter for status bar
-        for file_name in src_files:
-            full_file_name = os.path.join(self.src, file_name)
-            if (os.path.isfile(full_file_name)):
-                extension = os.path.splitext(full_file_name)[1]
-                if (extension == ".flac"):
-                    try:
-                        shutil.copy2(full_file_name, dest)
-                        self.status = str(count) + "/" + str(numfiles) + " calls have been copied"
-                        app.statusVariable.set(self.status)
-                        app.update()
-                        count += 1
-                    except IOError,e:
-                        if (e.errno == 13):
-                            self.status = str(count) + "/" + str(numfiles) + " calls have been copied"
-                            app.statusVariable.set(self.status)
-                            app.update()
-                            count += 1
-                            continue
-                        else:
-                            tkMessageBox.showerror("Copy error", str(e))
-        
+
+    # copy files to their places
+    for file in fullPaths:
+        lastSlash = file.rfind('/') + 1
+        tempDest = file[lastSlash:]
+        tempList = tempDest.split('_')
+        subDest = tempList[0]
+        finalDest = myDest + subDest
+        shutil.copy(file, finalDest)
+
+lets = GetFlaccy(src, dest)
