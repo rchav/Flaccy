@@ -3,11 +3,19 @@
 import shutil
 import os
 
-src = "/Projects/InPho/"
+src = "/Projects/InPho/Rikers Calls/"
 dest = "/Projects/InPho/Rikers Calls Dev/"
 
 DANYsrc = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\\'
 DANYdest = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\Rikers Calls Dev\\'
+
+slash = '/'
+
+# print 'Are you on a Windows PC? ("yes" or "no")'
+# os = raw_input()
+# if os == 'yes':
+#     slash = '\\'
+
 
 def GetFlaccy(mySrc, myDest):
 
@@ -44,7 +52,7 @@ def GetFlaccy(mySrc, myDest):
 
     # create the BAC folders
     for BAC in BACs: 
-        folder = myDest + BAC + '/'
+        folder = myDest + BAC + slash
         if not os.path.exists(folder):
             os.makedirs(folder)
         
@@ -54,14 +62,17 @@ def GetFlaccy(mySrc, myDest):
     counter = 0
 
     for file in fullPaths:
-        lastSlash = file.rfind('/') + 1
+        lastSlash = file.rfind(slash) + 1
         fileName = file[lastSlash:]
         tempList = fileName.split('_')
         subDest = tempList[0]
         finalDest = myDest + subDest 
-        if not os.path.exists(finalDest + '/' + fileName):
+        if not os.path.exists(finalDest + slash + fileName):
             shutil.copy(file, finalDest)
+            status = ' files copied'
+        else:
+            status = ' files skipped (already exists)'
         counter = counter + 1
-        print str(counter) + ' of ' + str(numberOfFiles) + ' files copied'
+        print str(counter) + ' of ' + str(numberOfFiles) + status
 
 lets = GetFlaccy(src, dest)
