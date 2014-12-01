@@ -1,5 +1,4 @@
 # Let's get Flaccy
-
 import shutil
 import os
 
@@ -9,12 +8,11 @@ dest = "/Projects/InPho/Rikers Calls Dev/"
 DANYsrc = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\\'
 DANYdest = '\\DANY.NYCNET\DANYXDrive\Rikers Calls\Rikers Calls Dev\\'
 
+# change for Unix vs. Windows
 slash = '/'
 
-# print 'Are you on a Windows PC? ("yes" or "no")'
-# os = raw_input()
-# if os == 'yes':
-#     slash = '\\'
+# what type of file are you looking for?
+fileType = '.flac'
 
 
 def GetFlaccy(mySrc, myDest):
@@ -22,9 +20,6 @@ def GetFlaccy(mySrc, myDest):
     # create some lists of flac files and their paths
     fullPaths = []
     justFileNames = []
-
-    # what type of file are you looking for?
-    fileType = '.flac'
 
     # loop time
     for root, dirs, files in os.walk(mySrc, topdown=False):
@@ -40,7 +35,6 @@ def GetFlaccy(mySrc, myDest):
             if justFlacFileName.endswith(fileType):
                 justFileNames.append(justFlacFileName)
 
-
     # create a set of unique BACs
     BACs = set()
     for fileName in justFileNames:
@@ -49,30 +43,32 @@ def GetFlaccy(mySrc, myDest):
     # turn the set into a list
     BACs = list(BACs)
 
-
     # create the BAC folders
     for BAC in BACs: 
         folder = myDest + BAC + slash
         if not os.path.exists(folder):
             os.makedirs(folder)
         
-
     # copy files to their places
     numberOfFiles = len(justFileNames)
     counter = 0
 
     for file in fullPaths:
-        lastSlash = file.rfind(slash) + 1
-        fileName = file[lastSlash:]
+        lastSlashIndex = file.rfind(slash) + 1
+        fileName = file[lastSlashIndex:]
         tempList = fileName.split('_')
         subDest = tempList[0]
         finalDest = myDest + subDest 
+
         if not os.path.exists(finalDest + slash + fileName):
             shutil.copy(file, finalDest)
             status = ' files copied'
         else:
             status = ' files skipped (already exists)'
+
         counter = counter + 1
         print str(counter) + ' of ' + str(numberOfFiles) + status
+        
 
+# start the program!
 lets = GetFlaccy(src, dest)
